@@ -1,0 +1,20 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: cpus-products
+  datasource:
+    password: P@ssword*123
+    url: jdbc:postgresql://code4fun.xyz:5432/blogs?currentSchema=cpu-shop
+    username: dev
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: false
