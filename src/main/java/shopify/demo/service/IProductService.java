@@ -2,6 +2,7 @@ package shopify.demo.service;
 
 import org.springframework.data.domain.Pageable;
 import shopify.demo.dto.request.ProductRequestDto;
+import shopify.demo.dto.request.ProductUpdateDto;
 import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.shared.PageList;
 
@@ -12,4 +13,5 @@ public interface IProductService {
     ProductResponseDto createProduct(ProductRequestDto productRequestDto);
     ProductResponseDto findProductById(UUID productId);
     void deleteProduct(UUID productId);
+    ProductResponseDto updateProduct(UUID productId, ProductUpdateDto productUpdateDto);
 }

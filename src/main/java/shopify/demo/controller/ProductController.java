@@ -7,6 +7,7 @@ import shopify.demo.controller.route.CommonRoute;
 import shopify.demo.controller.route.ProductRoute;
 
 import shopify.demo.dto.request.ProductRequestDto;
+import shopify.demo.dto.request.ProductUpdateDto;
 import shopify.demo.service.IProductService;
 import shopify.demo.shared.ResponseEntityBuilder;
 
@@ -48,5 +49,11 @@ public class ProductController {
     @DeleteMapping(ProductRoute.BASE_URL + "/{productId}")
     public ResponseEntity<?> deleteOneProduct (@PathVariable final UUID productId) { productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping(ProductRoute.BASE_URL + "/{productId}")
+    public ResponseEntity<?> updateOneProduct (@PathVariable final UUID productId, @RequestBody ProductUpdateDto productUpdateDto) {
+        var productResponse =  productService.updateProduct(productId, productUpdateDto);
+        return ResponseEntity.ok(productResponse);
     }
 }
