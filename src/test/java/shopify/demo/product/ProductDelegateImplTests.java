@@ -22,6 +22,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import shopify.demo.dto.request.ProductRequestDto;
+import shopify.demo.exception.ErrorCode;
+import shopify.demo.exception.ShopifyRuntimeException;
 import shopify.demo.mapper.ProductMapper;
 import shopify.demo.model.entity.ProductEntity;
 import shopify.demo.repository.ProductRepository;
@@ -31,8 +33,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static shopify.demo.product.ProductTestApi.makeProductForSaving;
-import static shopify.demo.product.ProductTestApi.prepareProductRequest;
+import static shopify.demo.product.ProductTestApi.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -75,6 +76,40 @@ public class ProductDelegateImplTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(expectedProductResponse.getId().toString()))
                 .andExpect(jsonPath("$.brand").value(expectedProductResponse.getBrand()));
-
     }
+    @Test
+    public void givenProductId_whenFindProduct_thenReturnProductResponse() throws Exception {
+        var productRequest = ProductRequestDto.builder()
+                .brand("Noctua")
+                .model("NH-D15")
+                .socket("AM4")
+                .fanSize(140.0)
+                .fanSpeed(1500)
+                .fanNoiseLevel(24.6)
+                .numberOfFans(2)
+                .price(89.99)
+                .build();
+
+        var mockProductId =  UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c");
+
+        when(productRepository.findById(mockProductId)).thenReturn(Optional.of(makeProductForSaving(productRequest)));
+
+        var expectedProductResponse = productMapper.toProductResponse(makeProductResponse(productRequest));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/" + mockProductId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expectedProductResponse.getId().toString()));
+    }
+    @Test
+    public void givenInvalidProductId_whenGetProductById_thenThrowException() throws Exception {
+        UUID productIdRandom = UUID.randomUUID();
+
+        when(productRepository.findById(productIdRandom))
+                .thenThrow(new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/" + productIdRandom)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.details.message").value("Could not find the Id"));;
+    }
+
 }

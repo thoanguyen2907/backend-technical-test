@@ -23,6 +23,19 @@ public final class ProductTestApi {
                     .price(productRequest.getPrice())
                     .build();
         }
+    public static ProductEntity makeProductResponse(final ProductRequestDto productRequest) {
+        return ProductEntity.builder()
+                .id(UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c"))
+                .brand(productRequest.getBrand())
+                .model(productRequest.getModel())
+                .socket(productRequest.getSocket())
+                .fanSize(productRequest.getFanSize())
+                .fanSpeed(productRequest.getFanSpeed())
+                .fanNoiseLevel(productRequest.getFanNoiseLevel())
+                .numberOfFans(productRequest.getNumberOfFans())
+                .price(productRequest.getPrice())
+                .build();
+    }
     public static ProductRequestDto prepareProductRequest() {
         return ProductRequestDto.builder()
                 .brand("Noctua")
