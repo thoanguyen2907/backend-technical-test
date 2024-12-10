@@ -44,4 +44,9 @@ public class ProductController {
         var productResponse = productService.findProductById(productId);
         return ResponseEntity.ok(productResponse);
     }
+
+    @DeleteMapping(ProductRoute.BASE_URL + "/{productId}")
+    public ResponseEntity<?> deleteOneProduct (@PathVariable final UUID productId) { productService.deleteProduct(productId);
+        return ResponseEntity.ok().build();
+    }
 }

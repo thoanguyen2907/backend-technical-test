@@ -50,7 +50,18 @@ public class ProductService implements IProductService {
             if(foundProduct == null) {
                 throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
             }
+            logger.info("Find product successfully");
         return productMapper.toProductResponse(foundProduct);
+    }
+
+    @Override
+    public void deleteProduct(UUID productId) {
+        var foundProduct = productRepository.findById(productId).orElse(null);
+        if(foundProduct == null) {
+            throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
+        }
+        productRepository.delete(foundProduct);
+        logger.info("Delete product successfully");
     }
 
     private PageList<ProductResponseDto> buildPaginatingResponse(final List<ProductResponseDto> responses,
