@@ -112,4 +112,34 @@ public class ProductDelegateImplTests {
                 .andExpect(jsonPath("$.details.message").value("Could not find the Id"));;
     }
 
+    @Test
+    public void givenProductUpdate_whenUpdatingProduct_thenReturnUpdatedProduct() throws Exception {
+        var mockProductId =  UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c");
+        var productRequest = ProductRequestDto.builder()
+                .brand("Noctua")
+                .model("NH-D15")
+                .socket("AM4")
+                .fanSize(140.0)
+                .fanSpeed(1500)
+                .fanNoiseLevel(24.6)
+                .numberOfFans(2)
+                .price(89.99)
+                .build();
+        when(productRepository.findById(mockProductId)).thenReturn(Optional.of(makeProductForSaving(productRequest)));
+
+        var updateProduct = makeProductForSaving(productRequest);
+        updateProduct.setPrice(50.00);
+
+        when(productRepository.save(any(ProductEntity.class))).thenReturn(updateProduct);
+
+        var expectedProductResponse = productMapper.toProductResponse(updateProduct);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(API_URL + "/" + mockProductId)
+
+        .content(objectMapper.writeValueAsString(updateProduct))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.price").value(expectedProductResponse.getPrice()));
+
+    }
 }
