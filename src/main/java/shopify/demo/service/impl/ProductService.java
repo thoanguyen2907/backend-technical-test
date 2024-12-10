@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import shopify.demo.dto.request.ProductRequestDto;
 import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.mapper.ProductMapper;
 import shopify.demo.repository.ProductRepository;
@@ -31,12 +32,19 @@ public class ProductService implements IProductService {
         return buildPaginatingResponse(productResponseList, pageable.getPageSize(), pageable.getPageNumber(), productList.getTotalElements());
     }
 
+    @Override
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
+        var product = productMapper.toProductEntity(productRequestDto);
+        var createdProduct = productRepository.save(product);
+        logger.info("Create product successfully");
+
+        return productMapper.toProductResponse(createdProduct);
+    }
+
     private PageList<ProductResponseDto> buildPaginatingResponse(final List<ProductResponseDto> responses,
                                                                final int pageSize,
                                                                final int currentPage,
                                                                final long total) {
-
-
         return PageList.<ProductResponseDto>builder()
                 .records(responses)
                 .limit(pageSize)

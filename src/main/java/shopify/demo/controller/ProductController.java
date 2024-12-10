@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shopify.demo.controller.route.CommonRoute;
 import shopify.demo.controller.route.ProductRoute;
 
+import shopify.demo.dto.request.ProductRequestDto;
 import shopify.demo.service.IProductService;
 import shopify.demo.shared.ResponseEntityBuilder;
 
@@ -34,5 +32,10 @@ public class ProductController {
                 .setDetails(productList)
                 .build();
 
+    }
+    @PostMapping(ProductRoute.BASE_URL)
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productRequestDto) {
+        var productResponse = productService.createProduct(productRequestDto);
+        return ResponseEntity.ok(productResponse);
     }
 }
