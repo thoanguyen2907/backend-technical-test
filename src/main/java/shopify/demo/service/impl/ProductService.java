@@ -7,12 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import shopify.demo.dto.request.ProductRequestDto;
 import shopify.demo.dto.response.ProductResponseDto;
+import shopify.demo.exception.ErrorCode;
+import shopify.demo.exception.ShopifyRuntimeException;
 import shopify.demo.mapper.ProductMapper;
 import shopify.demo.repository.ProductRepository;
 import shopify.demo.service.IProductService;
 import shopify.demo.shared.PageList;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,15 @@ public class ProductService implements IProductService {
         logger.info("Create product successfully");
 
         return productMapper.toProductResponse(createdProduct);
+    }
+
+    @Override
+    public ProductResponseDto findProductById(UUID productId) {
+        var foundProduct = productRepository.findById(productId).orElse(null);
+            if(foundProduct == null) {
+                throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
+            }
+        return productMapper.toProductResponse(foundProduct);
     }
 
     private PageList<ProductResponseDto> buildPaginatingResponse(final List<ProductResponseDto> responses,
