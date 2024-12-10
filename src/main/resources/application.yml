@@ -7,6 +7,10 @@ spring:
     password: P@ssword*123
     url: jdbc:postgresql://code4fun.xyz:5432/blogs?currentSchema=cpu-shop
     username: dev
+  flyway:
+    password: P@ssword*123
+    url: jdbc:postgresql://code4fun.xyz:5432/blogs?currentSchema=cpu-shop
+    user: dev
   jpa:
     generate-ddl: true
     hibernate:
@@ -18,3 +22,5 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: false
+flywaypf:
+  active: blog_dbo2
