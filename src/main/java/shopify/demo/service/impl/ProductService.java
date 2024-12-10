@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import shopify.demo.dto.request.ProductRequestDto;
+import shopify.demo.dto.request.ProductUpdateDto;
 import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.exception.ErrorCode;
 import shopify.demo.exception.ShopifyRuntimeException;
@@ -62,6 +63,18 @@ public class ProductService implements IProductService {
         }
         productRepository.delete(foundProduct);
         logger.info("Delete product successfully");
+    }
+
+    @Override
+    public ProductResponseDto updateProduct(UUID productId, ProductUpdateDto productUpdateDto) {
+        var foundProduct = productRepository.findById(productId).orElse(null);
+        if(foundProduct == null) {
+            throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
+        }
+        productMapper.updateProductEntityFromProductUpdate(productUpdateDto, foundProduct);
+
+        var updatedProduct = productRepository.save(foundProduct);
+        return productMapper.toProductResponse(updatedProduct);
     }
 
     private PageList<ProductResponseDto> buildPaginatingResponse(final List<ProductResponseDto> responses,

@@ -2,6 +2,7 @@ package shopify.demo.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import shopify.demo.dto.request.ProductRequestDto;
@@ -11,13 +12,12 @@ import shopify.demo.model.entity.ProductEntity;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProductMapper {
     ProductResponseDto toProductResponse(ProductEntity productEntity);
     List<ProductResponseDto> toListProductResponse(List<ProductEntity> productEntities);
     ProductEntity toProductEntity(ProductRequestDto productRequestDto);
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    ProductEntity toProductEntityFromProductUpdate(ProductUpdateDto productUpdateDto);
-
+    void updateProductEntityFromProductUpdate(ProductUpdateDto productUpdateDto, @MappingTarget ProductEntity productEntity);
 
 }
