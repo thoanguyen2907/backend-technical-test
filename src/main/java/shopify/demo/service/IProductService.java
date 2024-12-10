@@ -11,4 +11,5 @@ public interface IProductService {
     PageList<ProductResponseDto> getAllProducts(Pageable pageable);
     ProductResponseDto createProduct(ProductRequestDto productRequestDto);
     ProductResponseDto findProductById(UUID productId);
+    void deleteProduct(UUID productId);
 }
