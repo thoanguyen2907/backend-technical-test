@@ -6,15 +6,15 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,11 +22,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import shopify.demo.dto.request.ProductRequestDto;
+import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.exception.ErrorCode;
 import shopify.demo.exception.ShopifyRuntimeException;
 import shopify.demo.mapper.ProductMapper;
 import shopify.demo.model.entity.ProductEntity;
 import shopify.demo.repository.ProductRepository;
+import shopify.demo.shared.PageList;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -141,5 +143,37 @@ public class ProductDelegateImplTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(expectedProductResponse.getPrice()));
 
+    }
+
+    @Test
+    public void givenRequestForListProduct_whenRequestListProduct_thenReturnsListProduct() throws Exception {
+        int offset = 0;
+        int limit = 10;
+        var productList = createMockProductList();
+        var productResponseList = createMockProductResponseList();
+        var totalRecords = productList.size();
+        Pageable pageable = PageRequest.of(offset, limit);
+        Page<ProductEntity> page = new PageImpl<>(productList, pageable, totalRecords);
+
+        var productPageList = PageList.<ProductResponseDto>builder()
+                .records(productResponseList)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getPageNumber())
+                .totalRecords(totalRecords)
+                .totalPage((int) Math.ceil(totalRecords * 1.0 / pageable.getPageSize()))
+                .build();
+
+        when(productRepository.findAll(pageable)).thenReturn(page);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_URL)
+                .param("offset", String.valueOf(offset))
+                .param("limit", String.valueOf(limit))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.details.totalRecords", is(totalRecords)))
+                .andExpect(jsonPath("$.details.records[0].brand",
+                        is(productPageList.getRecords().get(0).getBrand())))
+                .andExpect(jsonPath("$.details.records[1].brand",
+                        is(productPageList.getRecords().get(1).getBrand())));
     }
 }

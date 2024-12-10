@@ -24,8 +24,9 @@ public class ProductController {
     }
 
     @GetMapping(ProductRoute.BASE_URL)
-    public ResponseEntity<?> getAllProducts (@RequestParam(name = "offset", defaultValue = "0") final Integer offset,
-                                                                    @RequestParam(name = "limit", defaultValue = "10") final Integer limit) {
+    public ResponseEntity<?> getAllProducts (
+            @RequestParam(name = "offset", defaultValue = "0") final Integer offset,
+            @RequestParam(name = "limit", defaultValue = "5") final Integer limit) {
         var pageable = PageRequest.of(offset, limit);
         var productList = productService.getAllProducts(pageable);
         return ResponseEntityBuilder

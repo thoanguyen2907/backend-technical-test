@@ -95,4 +95,24 @@ public final class ProductTestApi {
         return products;
 
     }
+
+    public static List<ProductResponseDto> createMockProductResponseList() {
+
+        List<ProductEntity> productEntities = createMockProductList();
+
+        return productEntities.stream()
+                .map(product -> ProductResponseDto.builder()
+                        .id(product.getId())
+                        .brand(product.getBrand())
+                        .model(product.getModel())
+                        .socket(product.getSocket())
+                        .fanSize(product.getFanSize())
+                        .fanSpeed(product.getFanSpeed())
+                        .fanNoiseLevel(product.getFanNoiseLevel())
+                        .numberOfFans(product.getNumberOfFans())
+                        .price(product.getPrice())
+                        .build())
+                .toList();
+    }
+
 }
