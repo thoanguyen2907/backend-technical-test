@@ -11,8 +11,26 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ShopifyRuntimeException extends RuntimeException {
     private String message;
     private HttpStatus status;
+
     public ShopifyRuntimeException(final CommonErrorCode code) {
         this.message = code.message();
         this.status = code.status();
+    }
+
+    @Override
+    public String getMessage() {
+        return this.message;
+    }
+
+    public void setMessage(final String message) {
+        this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(final HttpStatus status) {
+        this.status = status;
     }
 }

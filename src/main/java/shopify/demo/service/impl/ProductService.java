@@ -46,7 +46,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductResponseDto findProductById(UUID productId) {
+    public ProductResponseDto findProductById(UUID productId) throws ShopifyRuntimeException {
         var foundProduct = productRepository.findById(productId).orElse(null);
             if(foundProduct == null) {
                 throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
@@ -56,7 +56,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void deleteProduct(UUID productId) {
+    public void deleteProduct(UUID productId) throws ShopifyRuntimeException {
         var foundProduct = productRepository.findById(productId).orElse(null);
         if(foundProduct == null) {
             throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
@@ -66,7 +66,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductResponseDto updateProduct(UUID productId, ProductUpdateDto productUpdateDto) {
+    public ProductResponseDto updateProduct(UUID productId, ProductUpdateDto productUpdateDto) throws ShopifyRuntimeException {
+
         var foundProduct = productRepository.findById(productId).orElse(null);
         if(foundProduct == null) {
             throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
