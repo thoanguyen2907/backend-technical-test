@@ -1,5 +1,7 @@
 package shopify.demo.shared;
+
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class PageList<T> {
     private int offset;
     private int limit;
