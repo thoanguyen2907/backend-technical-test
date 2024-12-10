@@ -2,19 +2,15 @@ server:
   port: 8080
 spring:
   application:
-    name: cpus-products
+    name: demo
   datasource:
-    password: P@ssword*123
-    url: jdbc:postgresql://code4fun.xyz:5432/blogs?currentSchema=cpu-shop
+    url: jdbc:postgresql://code4fun.xyz:5432/postgres?currentSchema=shopify
     username: dev
-  flyway:
     password: P@ssword*123
-    url: jdbc:postgresql://code4fun.xyz:5432/blogs?currentSchema=cpu-shop
-    user: dev
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -22,5 +18,4 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: false
-flywaypf:
-  active: blog_dbo2
+
