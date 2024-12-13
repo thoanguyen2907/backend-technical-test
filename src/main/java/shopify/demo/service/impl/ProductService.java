@@ -11,7 +11,9 @@ import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.exception.ErrorCode;
 import shopify.demo.exception.ShopifyRuntimeException;
 import shopify.demo.mapper.ProductMapper;
+import shopify.demo.model.entity.SocketEntity;
 import shopify.demo.repository.ProductRepository;
+import shopify.demo.repository.SocketRepository;
 import shopify.demo.service.IProductService;
 import shopify.demo.shared.PageList;
 
@@ -24,6 +26,7 @@ public class ProductService implements IProductService {
     private static final Logger logger = LogManager.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final SocketRepository socketRepository;
 
     @Override
     public PageList<ProductResponseDto> getAllProducts(Pageable pageable) {
@@ -39,7 +42,11 @@ public class ProductService implements IProductService {
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         var product = productMapper.toProductEntity(productRequestDto);
-        var createdProduct = productRepository.save(product);
+        SocketEntity socket = socketRepository.findById(productRequestDto.getSocketId())
+                .orElseThrow(() -> new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND)
+                );
+        product.setSocket(socket);
+         var createdProduct = productRepository.save(product);
         logger.info("Create product successfully");
 
         return productMapper.toProductResponse(createdProduct);

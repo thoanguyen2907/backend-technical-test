@@ -27,9 +27,6 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "model", nullable = false)
     private String model;
 
-    @Column(name = "socket", nullable = false)
-    private String socket;
-
     @Column(name = "fan_size" , nullable = false)
     private Double fanSize;
 
@@ -45,4 +42,7 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "price", nullable = false)
     private Double price;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "socket_id")
+    private SocketEntity socket;
 }
