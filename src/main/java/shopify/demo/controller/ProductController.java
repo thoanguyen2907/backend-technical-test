@@ -22,7 +22,6 @@ public class ProductController {
     public ProductController(IProductService productService) {
         this.productService = productService;
     }
-
     @GetMapping(ProductRoute.BASE_URL)
     public ResponseEntity<?> getAllProducts (
             @RequestParam(name = "offset", defaultValue = "0") final Integer offset,
@@ -41,6 +40,7 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(ProductRoute.BASE_URL + "/{productId}")
     public ResponseEntity<?> findOneProduct (@PathVariable final UUID productId) {
         var productResponse = productService.findProductById(productId);
@@ -52,6 +52,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PatchMapping(ProductRoute.BASE_URL + "/{productId}")
     public ResponseEntity<?> updateOneProduct (@PathVariable final UUID productId, @RequestBody ProductUpdateDto productUpdateDto) {
         var productResponse =  productService.updateProduct(productId, productUpdateDto);

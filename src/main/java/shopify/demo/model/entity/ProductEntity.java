@@ -21,28 +21,28 @@ public class ProductEntity extends BaseEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "brand")
+    @Column(name = "brand", nullable = false)
     private String brand;
 
-    @Column(name = "model")
+    @Column(name = "model", nullable = false)
     private String model;
 
-    @Column(name = "socket")
+    @Column(name = "socket", nullable = false)
     private String socket;
 
-    @Column(name = "fan_size")
+    @Column(name = "fan_size" , nullable = false)
     private Double fanSize;
 
-    @Column(name = "fan_speed")
+    @Column(name = "fan_speed", nullable = false)
     private Integer fanSpeed;
 
-    @Column(name = "fan_noise_level")
+    @Column(name = "fan_noise_level", nullable = false)
     private Double fanNoiseLevel;
 
-    @Column(name = "number_of_fans")
+    @Column(name = "number_of_fans", nullable = false)
     private Integer numberOfFans;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Double price;
 
 }

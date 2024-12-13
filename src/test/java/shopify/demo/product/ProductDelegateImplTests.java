@@ -1,6 +1,5 @@
 package shopify.demo.product;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
