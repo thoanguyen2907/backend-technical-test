@@ -25,7 +25,7 @@ public class ProductRequestDto {
     private String model;
 
     @NotNull(message = "Socket Id cannot be null")
-    private UUID socketId;
+    private UUID socket;
 
     @NotNull(message = "Fansize cannot be null")
     private Double fanSize;

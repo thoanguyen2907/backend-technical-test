@@ -42,7 +42,7 @@ public class ProductService implements IProductService {
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         var product = productMapper.toProductEntity(productRequestDto);
-        SocketEntity socket = socketRepository.findById(productRequestDto.getSocketId())
+        SocketEntity socket = socketRepository.findById(productRequestDto.getSocket())
                 .orElseThrow(() -> new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND)
                 );
         product.setSocket(socket);
@@ -78,6 +78,12 @@ public class ProductService implements IProductService {
         var foundProduct = productRepository.findById(productId).orElse(null);
         if(foundProduct == null) {
             throw new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND);
+        }
+        if(foundProduct.getSocket().getId() != productUpdateDto.getSocket()) {
+            SocketEntity socket = socketRepository.findById(productUpdateDto.getSocket())
+                    .orElseThrow(() -> new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND)
+                    );
+            foundProduct.setSocket(socket);
         }
         productMapper.updateProductEntityFromProductUpdate(productUpdateDto, foundProduct);
 

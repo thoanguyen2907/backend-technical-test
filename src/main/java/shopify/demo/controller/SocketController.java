@@ -22,7 +22,8 @@ public class SocketController {
     public SocketController(ISocketService socketService) {
         this.socketService = socketService;
     }
-    
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(SocketRoute.BASE_URL)
     public ResponseEntity<?> getAllSockets (
             @RequestParam(name = "offset", defaultValue = "0") final Integer offset,

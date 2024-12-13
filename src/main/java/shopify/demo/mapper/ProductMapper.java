@@ -17,10 +17,10 @@ public interface ProductMapper {
 
     List<ProductResponseDto> toListProductResponse(List<ProductEntity> productEntities);
 
-    @Mapping(source = "socketId", target = "socket.id")
+    @Mapping(source = "socket", target = "socket.id")
     ProductEntity toProductEntity(ProductRequestDto productRequestDto);
 
-    @Mapping(source = "socketId", target = "socket.id")
+    @Mapping(source = "socket", target = "socket.id")
     void updateProductEntityFromProductUpdate(ProductUpdateDto productUpdateDto, @MappingTarget ProductEntity productEntity);
 
 }

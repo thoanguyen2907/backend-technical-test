@@ -22,7 +22,7 @@ public class ProductUpdateDto {
     private String model;
 
     @NotNull(message = "Socket Id cannot be null")
-    private UUID socketId;
+    private UUID socket;
 
     @NotNull(message = "Fan Size Id cannot be null")
     private Double fanSize;
