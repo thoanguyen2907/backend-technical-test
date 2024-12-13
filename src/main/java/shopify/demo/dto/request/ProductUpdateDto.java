@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,18 +17,25 @@ import lombok.Setter;
 public class ProductUpdateDto {
     @NotNull(message = "Brand cannot be null")
     private String brand;
+
     @NotNull(message = "Model cannot be null")
     private String model;
-    @NotNull(message = "Socket cannot be null")
-    private String socket;
-    @NotNull(message = "Fansize cannot be null")
+
+    @NotNull(message = "Socket Id cannot be null")
+    private UUID socketId;
+
+    @NotNull(message = "Fan Size Id cannot be null")
     private Double fanSize;
+
     @NotNull(message = "Fanspeed cannot be null")
     private Integer fanSpeed;
+
     @NotNull(message = "FanNoiseLevel cannot be null")
     private Double fanNoiseLevel;
+
     @NotNull(message = "NumberOfFans cannot be null")
     private Integer numberOfFans;
+
     @NotNull(message = "Price cannot be null")
     private Double price;
 }
