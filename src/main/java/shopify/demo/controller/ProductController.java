@@ -1,5 +1,6 @@
 package shopify.demo.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping(ProductRoute.BASE_URL)
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
         var productResponse = productService.createProduct(productRequestDto);
         return ResponseEntity.ok(productResponse);
     }
@@ -54,7 +55,7 @@ public class ProductController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PatchMapping(ProductRoute.BASE_URL + "/{productId}")
-    public ResponseEntity<?> updateOneProduct (@PathVariable final UUID productId, @RequestBody ProductUpdateDto productUpdateDto) {
+    public ResponseEntity<?> updateOneProduct (@PathVariable final UUID productId, @Valid @RequestBody ProductUpdateDto productUpdateDto) {
         var productResponse =  productService.updateProduct(productId, productUpdateDto);
         return ResponseEntity.ok(productResponse);
     }
