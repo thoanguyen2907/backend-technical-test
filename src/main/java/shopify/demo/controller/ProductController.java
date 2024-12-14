@@ -55,7 +55,7 @@ public class ProductController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PatchMapping(ProductRoute.BASE_URL + "/{productId}")
-    public ResponseEntity<?> updateOneProduct (@PathVariable final UUID productId, @Valid @RequestBody ProductUpdateDto productUpdateDto) {
+    public ResponseEntity<?> updateOneProduct (@PathVariable final UUID productId, @RequestBody ProductUpdateDto productUpdateDto) {
         var productResponse =  productService.updateProduct(productId, productUpdateDto);
         return ResponseEntity.ok(productResponse);
     }
