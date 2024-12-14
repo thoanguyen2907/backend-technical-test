@@ -3,6 +3,7 @@ package shopify.demo.product;
 import shopify.demo.dto.request.ProductRequestDto;
 import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.model.entity.ProductEntity;
+import static shopify.demo.socket.SocketTestApi.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public final class ProductTestApi {
                     .id(UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c"))
                     .brand(productRequest.getBrand())
                     .model(productRequest.getModel())
-                    .socket(productRequest.getSocket())
+                    .socket(makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea")))
                     .fanSize(productRequest.getFanSize())
                     .fanSpeed(productRequest.getFanSpeed())
                     .fanNoiseLevel(productRequest.getFanNoiseLevel())
@@ -28,7 +29,7 @@ public final class ProductTestApi {
                 .id(UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c"))
                 .brand(productRequest.getBrand())
                 .model(productRequest.getModel())
-                .socket(productRequest.getSocket())
+                .socket(makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea")))
                 .fanSize(productRequest.getFanSize())
                 .fanSpeed(productRequest.getFanSpeed())
                 .fanNoiseLevel(productRequest.getFanNoiseLevel())
@@ -40,7 +41,7 @@ public final class ProductTestApi {
         return ProductRequestDto.builder()
                 .brand("Noctua")
                 .model("NH-D15")
-                .socket("AM4")
+                .socket( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea"))
                 .fanSize(140.0)
                 .fanSpeed(1500)
                 .fanNoiseLevel(24.6)
@@ -56,7 +57,7 @@ public final class ProductTestApi {
                 .id(UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c"))
                 .brand("CoolerMaster")
                 .model("Hyper 212")
-                .socket("LGA1700")
+                .socket(makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea")))
                 .fanSize(120.0)
                 .fanSpeed(2000)
                 .fanNoiseLevel(24.0)
@@ -68,7 +69,7 @@ public final class ProductTestApi {
                 .id(UUID.fromString("17326271-9a2b-4def-8115-b72e2ec9dc7c"))
                 .brand("Noctua")
                 .model("NH-D15")
-                .socket("AM4")
+                .socket(makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea")))
                 .fanSize(140.0)
                 .fanSpeed(1500)
                 .fanNoiseLevel(19.2)
@@ -80,7 +81,7 @@ public final class ProductTestApi {
                 .id(UUID.fromString("76286271-5a3b-4cad-9235-b32e2ec9dc7c"))
                 .brand("Arctic")
                 .model("Freezer 34")
-                .socket("AM4")
+                .socket(makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea")))
                 .fanSize(120.0)
                 .fanSpeed(1800)
                 .fanNoiseLevel(22.5)
@@ -105,7 +106,7 @@ public final class ProductTestApi {
                         .id(product.getId())
                         .brand(product.getBrand())
                         .model(product.getModel())
-                        .socket(product.getSocket())
+                        .socket(product.getSocket().getName())
                         .fanSize(product.getFanSize())
                         .fanSpeed(product.getFanSpeed())
                         .fanNoiseLevel(product.getFanNoiseLevel())

@@ -27,6 +27,7 @@ import shopify.demo.exception.ShopifyRuntimeException;
 import shopify.demo.mapper.ProductMapper;
 import shopify.demo.model.entity.ProductEntity;
 import shopify.demo.repository.ProductRepository;
+import shopify.demo.repository.SocketRepository;
 import shopify.demo.shared.PageList;
 
 import static org.hamcrest.Matchers.is;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static shopify.demo.product.ProductTestApi.*;
+import static shopify.demo.socket.SocketTestApi.makeSocketForSaving;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -49,6 +51,9 @@ public class ProductDelegateImplTests {
     @MockBean
     private ProductRepository productRepository;
 
+    @MockBean
+    private SocketRepository socketRepository;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -60,15 +65,22 @@ public class ProductDelegateImplTests {
         var productRequest = ProductRequestDto.builder()
                 .brand("Noctua")
                 .model("NH-D15")
-                .socket("AM4")
+                .socket(UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea"))
                 .fanSize(140.0)
                 .fanSpeed(1500)
                 .fanNoiseLevel(24.6)
                 .numberOfFans(2)
                 .price(89.99)
                 .build();
+
         ProductEntity savedProductEntity = makeProductForSaving(productRequest);
+        var mockSocketEntity = makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea"));
+
+        when(socketRepository.findById(any(UUID.class)))
+                .thenReturn(Optional.of(mockSocketEntity));
+
         when(productRepository.save(any(ProductEntity.class))).thenReturn(savedProductEntity);
+
         var expectedProductResponse = productMapper.toProductResponse(savedProductEntity);
 
         mockMvc.perform(MockMvcRequestBuilders.post(API_URL)
@@ -83,7 +95,7 @@ public class ProductDelegateImplTests {
         var productRequest = ProductRequestDto.builder()
                 .brand("Noctua")
                 .model("NH-D15")
-                .socket("AM4")
+                .socket(UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea"))
                 .fanSize(140.0)
                 .fanSpeed(1500)
                 .fanNoiseLevel(24.6)
@@ -116,10 +128,12 @@ public class ProductDelegateImplTests {
     @Test
     public void givenProductUpdate_whenUpdatingProduct_thenReturnUpdatedProduct() throws Exception {
         var mockProductId =  UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c");
+        var mockSocketId = UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea");
+        var mockSocketEntity = makeSocketForSaving(mockSocketId);
         var productRequest = ProductRequestDto.builder()
                 .brand("Noctua")
                 .model("NH-D15")
-                .socket("AM4")
+                .socket( mockSocketId)
                 .fanSize(140.0)
                 .fanSpeed(1500)
                 .fanNoiseLevel(24.6)
@@ -127,6 +141,19 @@ public class ProductDelegateImplTests {
                 .price(89.99)
                 .build();
         when(productRepository.findById(mockProductId)).thenReturn(Optional.of(makeProductForSaving(productRequest)));
+
+        when(socketRepository.findById(mockSocketId)).thenReturn(Optional.of(mockSocketEntity));
+
+        var productUpdateRequest = ProductRequestDto.builder()
+                .brand("Noctua")
+                .model("NH-D15")
+                .socket( mockSocketId)
+                .fanSize(140.0)
+                .fanSpeed(1500)
+                .fanNoiseLevel(24.6)
+                .numberOfFans(2)
+                .price(50.00)
+                .build();
 
         var updateProduct = makeProductForSaving(productRequest);
         updateProduct.setPrice(50.00);
@@ -136,8 +163,7 @@ public class ProductDelegateImplTests {
         var expectedProductResponse = productMapper.toProductResponse(updateProduct);
 
         mockMvc.perform(MockMvcRequestBuilders.patch(API_URL + "/" + mockProductId)
-
-        .content(objectMapper.writeValueAsString(updateProduct))
+        .content(objectMapper.writeValueAsString(productUpdateRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(expectedProductResponse.getPrice()));
