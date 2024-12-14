@@ -90,6 +90,32 @@ public class ProductDelegateImplTests {
                 .andExpect(jsonPath("$.id").value(expectedProductResponse.getId().toString()))
                 .andExpect(jsonPath("$.brand").value(expectedProductResponse.getBrand()));
     }
+
+    @Test
+    public void givenInvalidProductData_whenCreatingNewProduct_thenReturnProductResponse() throws Exception {
+        var productRequest = ProductRequestDto.builder()
+                .brand("Noctua")
+                .model(null)
+                .socket(UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea"))
+                .fanSize(140.0)
+                .fanSpeed(1500)
+                .fanNoiseLevel(24.6)
+                .numberOfFans(2)
+                .price(89.99)
+                .build();
+
+        var mockSocketEntity = makeSocketForSaving( UUID.fromString("48397058-216e-4e09-9821-952e9ecfbdea"));
+
+        when(socketRepository.findById(any(UUID.class)))
+                .thenReturn(Optional.of(mockSocketEntity));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(API_URL)
+                        .content(objectMapper.writeValueAsString(productRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.details.model").value("Model cannot be null"));;
+    }
+
     @Test
     public void givenProductId_whenFindProduct_thenReturnProductResponse() throws Exception {
         var productRequest = ProductRequestDto.builder()
@@ -113,6 +139,18 @@ public class ProductDelegateImplTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(expectedProductResponse.getId().toString()));
     }
+    @Test
+    public void givenInValidProductId_whenGetProductById_thenThrowException() throws Exception {
+        UUID productIdRandom = UUID.fromString("e7b72799-2c8f-4e7a-9aa8-f53bc5c1a420");
+
+        when(productRepository.findById(productIdRandom))
+                .thenThrow(new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/" + productIdRandom)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
     @Test
     public void givenInvalidProductId_whenGetProductById_thenThrowException() throws Exception {
         UUID productIdRandom = UUID.randomUUID();
@@ -167,8 +205,35 @@ public class ProductDelegateImplTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(expectedProductResponse.getPrice()));
-
     }
+
+    @Test
+    public void givenInvalidSocketId_whenUpdatingProduct_thenThrowError() throws Exception {
+        var mockProductId = UUID.fromString("86286271-7c2b-4fad-9125-a32e2ec9dc7c");
+        var invalidSocketId = UUID.fromString("11111111-2222-3333-4444-555555555555");
+
+        var productRequest = ProductRequestDto.builder()
+                .brand("Noctua")
+                .model("NH-D15")
+                .socket(invalidSocketId)
+                .fanSize(140.0)
+                .fanSpeed(1500)
+                .fanNoiseLevel(24.6)
+                .numberOfFans(2)
+                .price(89.99)
+                .build();
+
+        when(productRepository.findById(mockProductId)).thenReturn(Optional.of(makeProductForSaving(productRequest)));
+
+        when(socketRepository.findById(invalidSocketId)).thenThrow(new ShopifyRuntimeException(ErrorCode.ID_NOT_FOUND));
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(API_URL + "/" + mockProductId)
+                        .content(objectMapper.writeValueAsString(productRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.details.message").value("Could not find the Id"));
+    }
+
 
     @Test
     public void givenRequestForListProduct_whenRequestListProduct_thenReturnsListProduct() throws Exception {
