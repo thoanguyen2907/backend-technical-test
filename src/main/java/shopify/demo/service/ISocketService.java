@@ -1,10 +1,9 @@
 package shopify.demo.service;
 
 import org.springframework.data.domain.Pageable;
-import shopify.demo.dto.request.ProductUpdateDto;
+
 import shopify.demo.dto.request.SocketRequestDto;
 import shopify.demo.dto.request.SocketUpdateDto;
-import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.dto.response.SocketResponseDto;
 import shopify.demo.shared.PageList;
 

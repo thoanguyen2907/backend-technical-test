@@ -17,7 +17,7 @@ public class ResponseEntityBuilder {
 
     private ResponseEntityBuilder() {
         map.put("timestamp", new Timestamp(System.currentTimeMillis()).toInstant().toString());
-        this.setCode(200); // Default code
+        this.setCode(200);
     }
 
     public static ResponseEntityBuilder getBuilder() {
@@ -26,7 +26,7 @@ public class ResponseEntityBuilder {
 
     public ResponseEntityBuilder setCode(final int code) {
         map.put("code", code);
-        setSuccess(code < 400); // Success if the status code is less than 400
+        setSuccess(code < 400);
         return this;
     }
 
@@ -35,18 +35,17 @@ public class ResponseEntityBuilder {
     }
 
     public ResponseEntityBuilder setMessage(final String message) {
-        map.put("message", message); // Set the message field
+        map.put("message", message);
 
         // Only add an error message if the code indicates failure
         if (map.get("code") != null && (Integer) map.get("code") >= 400) {
             Map<String, String> errorMessage = new HashMap<>();
             errorMessage.put("message", message);
-            errors.clear();  // Clear previous errors
+            errors.clear();
             errors.add(errorMessage);
-            map.put("error", errors); // Set the error list
+            map.put("error", errors);
         } else {
-            // If success, ensure the error field is not included
-            map.remove("error"); // Remove the error field if it's a success response
+            map.remove("error");
         }
 
         return this;

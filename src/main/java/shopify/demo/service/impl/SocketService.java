@@ -5,19 +5,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import shopify.demo.dto.request.ProductRequestDto;
-import shopify.demo.dto.request.ProductUpdateDto;
+
 import shopify.demo.dto.request.SocketRequestDto;
 import shopify.demo.dto.request.SocketUpdateDto;
-import shopify.demo.dto.response.ProductResponseDto;
 import shopify.demo.dto.response.SocketResponseDto;
 import shopify.demo.exception.ErrorCode;
 import shopify.demo.exception.ShopifyRuntimeException;
-import shopify.demo.mapper.ProductMapper;
+
 import shopify.demo.mapper.SocketMapper;
-import shopify.demo.repository.ProductRepository;
 import shopify.demo.repository.SocketRepository;
-import shopify.demo.service.IProductService;
 import shopify.demo.service.ISocketService;
 import shopify.demo.shared.PageList;
 
