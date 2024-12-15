@@ -4,9 +4,9 @@ spring:
   application:
     name: demo
   datasource:
-    url: jdbc:postgresql://code4fun.xyz:5432/postgres?currentSchema=shopify
-    username: dev
-    password: P@ssword*123
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     generate-ddl: true
     hibernate:
