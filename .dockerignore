@@ -1,0 +1,24 @@
+# Ignore Maven target directory (contains compiled classes, JAR files, etc.)
+target/
+
+# Ignore local Maven repository (which is recreated during the build)
+.m2/
+
+# Ignore IntelliJ IDEA project files
+.idea/
+
+# Ignore Eclipse project files
+.project
+.classpath
+.settings/
+
+# Ignore build logs
+*.log
+
+# Ignore any OS-specific files (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# Ignore Dockerfile and .dockerignore itself if you don't want to include them in the image
+Dockerfile
+.dockerignore
